@@ -48,8 +48,10 @@ extern int errno;
 #ifndef VM
 #ifndef vms
 #ifndef NeXT
+#ifndef __APPLE__
 extern char *sys_errlist[];		/* see man perror on cernvax */
 extern int sys_nerr;
+#endif
 #endif
 #endif
 #endif
@@ -188,7 +190,7 @@ PUBLIC int HTParseInet(sin, str)
 
 /*	Parse port number if present
 */    
-    if (port=index(host, ':')) {
+    if ((port=index(host, ':'))) {
     	*port++ = 0;		/* Chop off port */
         if (port[0]>='0' && port[0]<='9') {
 	    sin->sin_port = htons(strtol(port, (char**)0 , 10));

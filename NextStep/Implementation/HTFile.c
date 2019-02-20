@@ -164,7 +164,7 @@ PUBLIC BOOL HTEditable(filename)
 {
 #ifndef vms
 #ifndef NO_UNIX_IO
-    int 	groups[NGROUPS];	
+    gid_t 	groups[NGROUPS];	
     uid_t	myUid;
     int		ngroups;			/* The number of groups  */
     struct stat	fileStatus;

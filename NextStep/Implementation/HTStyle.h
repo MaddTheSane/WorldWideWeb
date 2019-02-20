@@ -19,7 +19,7 @@ typedef enum _SGML_tagtype {
 	LINE 			/* Style holds until end of line (ugh!)	*/
 } SGML_tagtype;
 	 
-typedef NXCoord HTCoord;
+typedef CGFloat HTCoord;
 
 typedef struct _HTStyle {
 	struct _HTStyle	*next;		/* Link for putting into stylesheet */
@@ -29,7 +29,7 @@ typedef struct _HTStyle {
 
 	id		font;		/* The character representation */
 	HTCoord		fontSize;	/* The size of font, not independent */
-	NXTextStyle	*paragraph;	/* Null means not defined */
+	NSDictionary	*paragraph;	/* Null means not defined */
 #ifdef V1
 	float		textColor;	/* Colour of text */
 #else
@@ -44,12 +44,12 @@ typedef struct _HTStyle {
 
 /*	Style functions:
 */
-extern HTStyle * HTStyleNew();
+extern HTStyle * HTStyleNew(void);
 extern HTStyle * HTStyleFree(HTStyle * self);
-extern HTStyle * HTStyleRead(HTStyle * self, NXStream * stream);
-extern HTStyle * HTStyleWrite(HTStyle * self, NXStream * stream);
-extern HTStyle * HTStyleApply(HTStyle * self, Text * text);
-extern HTStyle * HTStylePick(HTStyle * self, Text * text);
+extern HTStyle * HTStyleRead(HTStyle * self, NSStream * stream);
+extern HTStyle * HTStyleWrite(HTStyle * self, NSStream * stream);
+extern HTStyle * HTStyleApply(HTStyle * self, NSText * text);
+extern HTStyle * HTStylePick(HTStyle * self, NSText * text);
 typedef struct _HTStyleSheet {
 	char *		name;
 	HTStyle *	styles;
@@ -58,7 +58,7 @@ typedef struct _HTStyleSheet {
 
 /*	Stylesheet functions:
 */
-extern HTStyleSheet * HTStyleSheetNew();
+extern HTStyleSheet * HTStyleSheetNew(void);
 extern HTStyleSheet * HTStyleSheetFree(HTStyleSheet * self);
 extern HTStyle * HTStyleNamed(HTStyleSheet * self, const char * name);
 extern HTStyle * HTStyleForParagraph(HTStyleSheet * self,
@@ -69,9 +69,9 @@ extern HTStyleSheet * HTStyleSheetAddStyle(HTStyleSheet * self,
 extern HTStyleSheet * HTStyleSheetRemoveStyle(HTStyleSheet * self,
 	HTStyle * style);
 extern HTStyleSheet * HTStyleSheetRead(HTStyleSheet * self,
-						NXStream * stream);
+						NSStream * stream);
 extern HTStyleSheet * HTStyleSheetWrite(HTStyleSheet * self,
-						NXStream * stream);
+						NSStream * stream);
 
 #define CLEAR_POINTER ((void *)-1)	/* Pointer value means "clear me" */
 

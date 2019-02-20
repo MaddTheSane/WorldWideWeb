@@ -6,9 +6,9 @@
 **
 */
 
-#import <appkit/PageLayout.h>
+#import <appkit/NSPageLayout.h>
 
-@interface WWWPageLayout : PageLayout
+@interface WWWPageLayout : NSPageLayout
 {
     id leftMargin;
     id rightMargin;
@@ -18,7 +18,7 @@
 
 /* Methods overridden from superclass */
 
-- pickedUnits:sender;
+- (IBAction)pickedUnits:sender;
 - readPrintInfo;
 - writePrintInfo;
 

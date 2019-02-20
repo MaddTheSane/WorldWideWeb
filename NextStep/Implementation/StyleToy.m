@@ -27,8 +27,8 @@ extern char * appDirectory;		/* Pointer to directory for application */
        HTStyleSheet * styleSheet = 0;
 
 static HTStyle * style;			/* Current Style */
-static OpenPanel * open_panel;		/* Keep the open panel alive */
-static SavePanel * save_panel;		/* Keep a Save panel too */
+static NSOpenPanel * open_panel;		/* Keep the open panel alive */
+static NSSavePanel * save_panel;		/* Keep a Save panel too */
 
 //	Create new one:
 

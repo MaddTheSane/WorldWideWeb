@@ -96,6 +96,7 @@
 				559E10AF221BAC3B004A8E09 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		559E10AF221BAC3B004A8E09 /* Products */ = {
 			isa = PBXGroup;
@@ -377,7 +378,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = WorldWideWeb/WorldWideWeb.entitlements;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Implementation/Info.plist;
@@ -394,7 +395,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = WorldWideWeb/WorldWideWeb.entitlements;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Implementation/Info.plist;

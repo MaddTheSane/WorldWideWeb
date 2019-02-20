@@ -5,20 +5,18 @@
 **	to another anchor in the same or a different node.
 */
 
-#import <objc/Object.h>
-#import <objc/List.h>
-#import <appkit/appkit.h>
+#import <Cocoa/Cocoa.h>
 
 //			Main definition of anchor:
 //			========================== 
 
-@interface Anchor:Object
+@interface Anchor:NSObject
 {
     id		Node;		// The node within which this is an anchor
     				/* (HyperText *) */
 				// If not a subanchor
     Anchor *	parent;		// If this is a subanchor
-    List *	children;	// If this has subanchors, these are they.
+    NSMutableArray *	children;	// If this has subanchors, these are they.
        
 //	Information about this anchor:
 
@@ -26,11 +24,10 @@
 
 //	Generated locally, not archived:
 
-    List *	Sources;	// A list of anchors pointing to this
+    NSMutableArray *	Sources;	// A list of anchors pointing to this
     id		DestAnchor;	// The anchor, if loaded, to which this leads
 }
 
-+ initialize;
 + setManager:aManager;		// Set class variable
 
 + newAddress:(const char *)address;

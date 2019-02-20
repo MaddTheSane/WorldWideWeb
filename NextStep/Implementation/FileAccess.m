@@ -21,20 +21,12 @@
 #import "HTFile.h"		// File access routines
 
 
-#define THIS_TEXT  (HyperText *)[[[NXApp mainWindow] contentView] docView]
+#define THIS_TEXT  (HyperText *)[[[NSApp mainWindow] contentView] documentView]
 
 @implementation FileAccess : HyperAccess
 
 #define LENGTH 256
 extern char * appDirectory;		/* Pointer to directory for application */
-
-
-//	Initialize this class
-//
-+ initialize
-{
-    return [super initialize];
-}
 
 
 //	Overlay method returning the name of the access.
@@ -88,23 +80,23 @@ extern char * appDirectory;		/* Pointer to directory for application */
 //	returns		0 if no file selected
 //			pointer to static string with filename if ok
 //
-const char * ask_name(HyperText * hint, int format)
+NSString * ask_name(HyperText * hint, int format)
 {
     char * 		suggestion;
     char * 		slash;
-    int			status;
-    static SavePanel * 	save_panel;		/* Keep a Save panel alive  */
+    NSModalResponse			status;
+    static NSSavePanel * 	save_panel;		/* Keep a Save panel alive  */
     
     if (!hint) return 0;
     if (!save_panel) {
-        save_panel = [SavePanel new];	//	Keep between invocations
+        save_panel = [NSSavePanel new];	//	Keep between invocations
     }
     
-    if (format==WWW_HTML) [save_panel setRequiredFileType: "html"];
-    else if (format==WWW_RICHTEXT) [save_panel setRequiredFileType: "rtf"];
-    else if (format==WWW_PLAINTEXT) [save_panel setRequiredFileType: "txt"];
-    else if (format==WWW_POSTSCRIPT) [save_panel setRequiredFileType: "ps"];
-    else [save_panel setRequiredFileType: ""];
+    if (format==WWW_HTML) [save_panel setRequiredFileType: @"html"];
+    else if (format==WWW_RICHTEXT) [save_panel setRequiredFileType: @"rtf"];
+    else if (format==WWW_PLAINTEXT) [save_panel setRequiredFileType: @"txt"];
+    else if (format==WWW_POSTSCRIPT) [save_panel setRequiredFileType: @"ps"];
+    else [save_panel setRequiredFileType: @""];
     
     suggestion = HTLocalName([[hint nodeAnchor]address]);
     slash = strrchr(suggestion, '/');	//	Point to last slash
@@ -113,7 +105,7 @@ const char * ask_name(HyperText * hint, int format)
 	status = [save_panel runModalForDirectory:suggestion file:slash];
     } else {
         if (TRACE) printf ("No slash in directory!!\n");
-	status = [save_panel runModalForDirectory:"." file:suggestion];
+	status = [save_panel runModalForDirectory:@"." file:suggestion];
     }
     free(suggestion);
     

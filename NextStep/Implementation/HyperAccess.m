@@ -18,41 +18,35 @@
 @implementation HyperAccess
 
 //	Methods used by the Interface Builder code to connect up the application:
-- setTitleString:anObject
+- (void)setTitleString:anObject
 {
     titleString = anObject;
-    return self;
 }
 
-- setAddressString:anObject
+- (void)setAddressString:anObject
 {
     addressString = anObject;
-    return self;
 }
 
-- setOpenString:anObject
+- (void)setOpenString:anObject
 {
     openString = anObject;
-    return self;
 }
 
-- setKeywords:anObject
+- (void)setKeywords:anObject
 {
     keywords = anObject;
-    return self;
 }
 
-- setContentSearch:anObject
+- (void)setContentSearch:anObject
 {
     contentSearch = anObject;
-    return self;
 }
 
-- setManager:anObject;
+- (void)setManager:anObject;
 {
     manager = anObject;
     [(HyperManager *)manager registerAccess:self];
-    return self;
 }
 
 //	Methods to return the values of instance variables
@@ -74,31 +68,31 @@
 
 //	These are all dummies, because only subclasses of this class actually work.
 
-- search:sender
+- (IBAction)search:sender
 {
-    return nil;
+    
 }
 
-- searchRTF:sender
+- (IBAction)searchRTF:sender
 {
-    return nil;
+    
 }
 
-- searchSGML:sender
+- (IBAction)searchSGML:sender
 {
-    return nil;
+    
 }
 
 //	Direct open buttons:
 
-- open:sender
+- (IBAction)open:sender
 {
-    return nil;
+    
 }
 
-- openRTF:sender
+- (IBAction)openRTF:sender
 {
-    return nil;
+    
 }
 
 - openSGML:sender
@@ -124,8 +118,8 @@
 
 - saveNode:(HyperText *)aText
 {
-    NXRunAlertPanel(NULL,
-"You cannot overwrite this original document. You can use `save a copy in...'",
+    NSRunAlertPanel(NULL,
+@"You cannot overwrite this original document. You can use `save a copy in...'",
 	    	NULL,NULL,NULL);
     printf(
     "HyperAccess: You cannot save a hypertext document in this domain.\n");
@@ -150,7 +144,7 @@
 - textDidChange:textObject
 {
     if (TRACE) printf("HM: text Did Change.\n");
-    [[textObject window] setDocEdited:YES];	/* Broken cross in close button */
+    [[textObject window] setDocumentEdited:YES];	/* Broken cross in close button */
     return self;
 }
 

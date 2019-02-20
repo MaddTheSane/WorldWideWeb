@@ -8,12 +8,12 @@
 }
 + initialize;
 
-- saveAs: sender;
-- saveAsRichText: sender;
-- saveAsPlainText: sender;
-- makeNew:sender;
-- linkToNew:sender;
-- linkToFile:sender;
+- (IBAction)saveAs: sender;
+- (IBAction)saveAsRichText: sender;
+- (IBAction)saveAsPlainText: sender;
+- (IBAction)makeNew:sender;
+- (IBAction)linkToNew:sender;
+- (IBAction)linkToFile:sender;
 - openMy:(const char *)filename diagnostic:(int)diagnostic;
-- goHome:sender;
+- (IBAction)goHome:sender;
 @end

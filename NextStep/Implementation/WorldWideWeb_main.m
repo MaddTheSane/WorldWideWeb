@@ -7,33 +7,32 @@
  */
 
 #import <stdlib.h>
-#import <appkit/Application.h>
+#import <appkit/NSApplication.h>
 // #import <appkit/defaults.h>			/* TBL */
 #import "HTUtils.h"				/* TBL */
 #import <string.h>				/* TBL */
 #import <libc.h>				/* TBL */
-#import <appkit/PrintInfo.h>			/* TBL */
-#import <defaults/defaults.h>			/* TBL */
+#import <appkit/NSPrintInfo.h>			/* TBL */
+#import <Foundation/Foundation.h>			/* TBL */
 
 extern char * appDirectory;	/* Name of the directory containing the application */
 
 /*	Get Integer default value
 */
-static int int_default(const char * param)
+static NSInteger int_default(NSString * param)
 {
-    int	result = 0;
-    const char * string = NXGetDefaultValue("WorldWideWeb", param);
-    if (string) sscanf(string, "%i", &result);
-    return result;
+    return [[NSUserDefaults standardUserDefaults] integerForKey:param];
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 //    NXArgc = argc;		/* TBL */
 //    NXArgv = argv;		/* TBL */
-
+    
+#if 0
     char *p;
     
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"PaperType": @"Letter"}];
     static NXDefaultsVector myDefaults = {
         { "PaperType", "Letter"},		// Non-USA users will have to override
 	{ "LeftMargin", "72"},			//  (72) Space for ring binding
@@ -65,8 +64,7 @@ void main(int argc, char *argv[])
 	[pi setVertCentered:NO];
 	[pi setMarginLeft:leftM right:rightM top:topM bottom:bottomM]; // Points.
     }
+#endif
     
-    [NXApp run];
-    [NXApp free];
-    exit(0);
+    return NSApplicationMain(argc, argv);
 }

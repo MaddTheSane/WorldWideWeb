@@ -7,9 +7,7 @@
 **
 */
 #import "WWWPageLayout.h"
-#import <appkit/Application.h>
-#import <appkit/Matrix.h>
-#import <appkit/PrintInfo.h>
+#import <Cocoa/Cocoa.h>
 
 @implementation WWWPageLayout
 /*
@@ -31,7 +29,7 @@
  * Must update the margin fields.
  */
 {
-    float old, new;
+    CGFloat old, new;
 
     [self convertOldFactor:&old newFactor:&new];
     [leftMargin setFloatValue:new * [leftMargin floatValue] / old];
@@ -39,10 +37,10 @@
     [topMargin setFloatValue:new * [topMargin floatValue] / old];
     [bottomMargin setFloatValue:new * [bottomMargin floatValue] / old];
 
-    return [super pickedUnits:sender];
+    [super pickedUnits:sender];
 }
 
-- readPrintInfo
+- (void)readPrintInfo
 /*
  * Sets the margin fields from the Application-wide PrintInfo.
  */
@@ -52,7 +50,7 @@
     NXCoord left, right, top, bottom;
 
     [super readPrintInfo];
-    pi = [NXApp printInfo];
+    pi = [NSApp printInfo];
     [self convertOldFactor:&conversion newFactor:&dummy];
     [pi getMarginLeft:&left right:&right top:&top bottom:&bottom];
     [leftMargin setFloatValue:left * conversion];
@@ -60,16 +58,15 @@
     [topMargin setFloatValue:top * conversion];
     [bottomMargin setFloatValue:bottom * conversion];
 
-    return self;
 }
 
-- writePrintInfo
+- (void)writePrintInfo
 /*
  * Sets the margin values in the Application-wide PrintInfo from
  * the margin fields in the panel.
  */
 {
-    id pi;
+    NSPrintInfo *pi;
     float conversion, dummy;
 
     [super writePrintInfo];
@@ -83,7 +80,6 @@
     }
     if (*[pi paperType])
     	NXWriteDefault("WorldWideWeb", "PaperType", [pi paperType]);	/* Save it */
-    return self;
 }
 
 /* NIB outlet setting methods */

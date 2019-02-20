@@ -8,27 +8,24 @@
 #define ANCHOR_CURRENT_VERSION 0
 
 #import <ctype.h>
-#import <objc/Object.h>
-#import <objc/typedstream.h>
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "Anchor.h"
 #import "HTUtils.h"
 #import "HTParse.h"
 #import "HyperText.h"
 #import "HyperManager.h"
 
-@implementation Anchor:Object
+@implementation Anchor
 
 static HyperManager *manager;
-static List * orphans;		// Grand list of all anchors with no parents
-List * HTHistory;		// List of visited anchors
+static NSMutableArray * orphans;		// Grand list of all anchors with no parents
+NSMutableArray * HTHistory;		// List of visited anchors
 
-+ initialize 
++ (void)initialize
 {
-    orphans = [List new];
-    HTHistory = [List new];
+    orphans = [NSMutableArray new];
+    HTHistory = [NSMutableArray new];
     [Anchor setVersion:ANCHOR_CURRENT_VERSION];
-    return self;
 }
 
 + setManager:aManager
@@ -44,16 +41,16 @@ List * HTHistory;		// List of visited anchors
 //	anchor you are creating.
 //
 
-+ new
+-(instancetype)init
 {
-    Anchor * new_anchor;
-    new_anchor = [super new];
-    new_anchor->DestAnchor = nil;
-    new_anchor->Address = (char *)0;
-    new_anchor->Sources = [List new];
-    new_anchor->children = [List new];
-    new_anchor->parent = 0;
-    return new_anchor;
+    if (self = [super init]) {
+    DestAnchor = nil;
+    Address = (char *)0;
+    Sources = [NSMutableArray new];
+    children = [NSMutableArray new];
+    parent = 0;
+    }
+    return self;
 }
 
 
@@ -83,25 +80,26 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 
 + newParent:(Anchor *)anAnchor tag:(const char *)tag
 {
-    List * kids = anAnchor->children;
+    NSArray * kids = anAnchor->children;
     int n = [kids count];
     int i;
     
+    Anchor *newVal=nil;
     for(i=0; i<n; i++) {
-	self = [kids objectAt:i];
-	if (equivalent(Address, tag)) {
+	newVal = [kids objectAtIndex:i];
+	if (equivalent(newVal->Address, tag)) {
 	    if (TRACE) printf("Sub-anchor %p with name `%s' already exists.\n",
 		self, tag);
-	    return self;
+	    return newVal;
 	}
     }
 
-    self = [Anchor new];
+    newVal = [Anchor new];
     if (TRACE) printf("new Anchor %p named `%s' is child of %p\n",
     			self, tag, anAnchor);
-    parent = anAnchor;
-    [parent->children addObject:self];
-    StrAllocCopy(Address, tag);
+    newVal->parent = anAnchor;
+    [newVal->parent->children addObject:self];
+    StrAllocCopy(newVal->Address, tag);
     return self;
 }
 
@@ -117,6 +115,7 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 + newAddress:(const char *)anAddress;
 {
     char * anc = HTParse(anAddress, "", PARSE_ANCHOR); // Anchor id specified?
+    Anchor *newVal=nil;
 
 //	If the node is a sub-anchor, we recursively load its parent.
 //	Then we create a sub-anchor within than node.
@@ -126,7 +125,7 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 		 PARSE_ACCESS|PARSE_HOST|PARSE_PATH|PARSE_PUNCTUATION);
         Anchor * foundParent = [Anchor newAddress:nod];
 	free(nod);
-	self = [Anchor newParent:foundParent tag:anc];
+	newVal = [Anchor newParent:foundParent tag:anc];
     	free (anc);
 
 //	If the node has no parent, we check in a list of such nodes to see
@@ -137,20 +136,20 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 	int n=[orphans count];
 	free(anc);
 	for(i=0; i<n; i++) {
-	    self = [orphans objectAt:i];
+	    newVal = [orphans objectAtIndex:i];
 	    if (equivalent(Address, anAddress)) {
 		if (TRACE) printf(
 			"Anchor %p with address `%s' already exists.\n",
 		    	self, anAddress);
-		return self;
+		return newVal;
 	    }
 	}
-    	self = [Anchor new];
+    	newVal = [Anchor new];
 	if (TRACE) printf("new Anchor %p has address `%s'\n", self, anAddress);
     	StrAllocCopy(Address, anAddress);
     	[orphans addObject:self];
     }
-    return self;
+    return newVal;
 }
 
 
@@ -174,9 +173,9 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
     Anchor * up = [HTHistory lastObject];
     if (up)
     if (up->parent){
-        List * kids = up->parent->children;
-    	unsigned i = [kids indexOf:up]; 
-	Anchor * nextOne =[kids objectAt:i+offset];
+        NSArray * kids = up->parent->children;
+    	unsigned i = [kids indexOfObject:up];
+	Anchor * nextOne =[kids objectAtIndex:i+offset];
 	if (nextOne) {
 	    [HTHistory removeLastObject];
 	    [nextOne follow];
@@ -200,7 +199,7 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 - isLastChild
 {
     if(parent) {
-        List * siblings = parent->children;
+        NSMutableArray * siblings = parent->children;
 	[siblings removeObject:self];
 	return [siblings addObject:self];
     }
@@ -211,14 +210,14 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 //
 //		Free an anchor
 //		--------------
-- free
+- (void)dealloc
 {
     if (Address) free(Address);
     if (parent) [parent->children removeObject:self];
     if (TRACE) printf("Anchor: free called!  Not removed from Node!!!!!!!\n");
-    [Sources makeObjectsPerform:@selector(unload)];
+    [Sources makeObjectsPerformSelector:@selector(unload)];
     if (!parent) [orphans removeObject:self];
-    return [super free];
+    [super dealloc];
 }
 
 //	Get list of sources
@@ -254,7 +253,7 @@ PRIVATE BOOL equivalent(const char * s, const char *t)
 - delete
 {
     if (DestAnchor) [self unlink];		    // Remove outgoing link
-    [Sources makeObjectsPerform:@selector(unlink)]; // Remove incomming links
+    [Sources makeObjectsPerformSelector:@selector(unlink)]; // Remove incomming links
     return [self free];
 }
 

@@ -14,7 +14,7 @@
 
 @implementation TextToy
 
-#define THIS_TEXT  (HyperText *)[[[NXApp mainWindow] contentView] docView]
+#define THIS_TEXT  (HyperText *)[[[NSApp mainWindow] contentView] documentView]
 
     Anchor *	Mark;		/* A marked Anchor */
     
@@ -80,7 +80,7 @@
 
 - windowDidBecomeMain:window
 {
-    HyperText * HT =  [[window  contentView] docView];
+    HyperText * HT =  [[window  contentView] documentView];
     if (!HT) return self;
     
     if ([HT isIndex]) {
@@ -96,10 +96,10 @@
 //			Access Management functions
 //			===========================
 
-- registerAccess:(HyperAccess *)access
+- (void)registerAccess:(HyperAccess *)access
 {
-    if (!accesses) accesses=[List new];
-    return [accesses addObject:access];
+    if (!accesses) accesses=[NSMutableArray new];
+    [accesses addObject:access];
 }
 
 

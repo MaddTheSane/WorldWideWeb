@@ -4,12 +4,11 @@
 // History:
 //	26 Sep 90	Written TBL
 
-#import <objc/Object.h>
-#import <objc/List.h>
+#import <Foundation/Foundation.h>
 #import "Anchor.h"
 #import "HyperText.h"
 
-@interface HyperAccess:Object
+@interface HyperAccess:NSObject
 
 //	Target variables for interface builder hookups:
 
@@ -25,22 +24,22 @@
 
 //	Interface builder initialisation methods:
 
-- setManager:anObject;
-- setOpenString:anObject;
-- setKeywords:anObject;
-- setTitleString:anObject;
-- setAddressString:anObject;
-- setContentSearch:anObject;
+- (void)setManager:anObject;
+- (void)setOpenString:anObject;
+- (void)setKeywords:anObject;
+- (void)setTitleString:anObject;
+- (void)setAddressString:anObject;
+- (void)setContentSearch:anObject;
 
 //	Action methods for buttons etc:
 
-- search:sender;
-- searchRTF: sender;
-- searchSGML: sender;
+- (IBAction)search:sender;
+- (IBAction)searchRTF: sender;
+- (IBAction)searchSGML: sender;
 
-- open: sender;
-- openRTF:sender;
-- openSGML:sender;
+- (IBAction)open: sender;
+- (IBAction)openRTF:sender;
+- (IBAction)openSGML:sender;
 - saveNode:(HyperText *)aText;
 
 //	Calls form other code:
